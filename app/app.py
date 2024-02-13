@@ -33,4 +33,26 @@ def index():
 
 @app.route('/mars')
 def mars():
-    return render_template('mars.html')
+    url = 'https://api.nasa.gov/mars-photos/api/v1/rovers/opportunity/photos'
+
+    headers = {"Accept": "application/json"}
+
+    query = {
+        'api_key': os.environ["API_KEY"],
+        'sol': 1,
+        'page': 1,
+        'camera': 'PANCAM'
+    }
+
+    response = requests.request(
+        "GET",
+        url,
+        headers=headers,
+        params=query
+    )
+
+    res = response.json()
+
+    img_srcs = [photo['img_src'] for photo in res['photos']]
+    
+    return render_template('mars.html', img_srcs=img_srcs)
