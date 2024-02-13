@@ -56,3 +56,31 @@ def mars():
     img_srcs = [photo['img_src'] for photo in res['photos']]
     
     return render_template('mars.html', img_srcs=img_srcs)
+
+@app.route('/weather')
+def weather():
+    url = 'https://api.nasa.gov/insight_weather/'
+
+    headers = {"Accept": "application/json"}
+
+    query = {
+        'api_key': os.environ["API_KEY"],
+        'feedtype':'json',
+        'ver':'1.0'
+        # 'sol': 1,
+        # 'page': 1,
+        # 'camera': 'PANCAM'
+    }
+
+    response = requests.request(
+        "GET",
+        url,
+        headers=headers,
+        params=query
+    )
+
+    print(response)
+    res = response.json()
+    print(res)
+    
+    return render_template('weather.html')
